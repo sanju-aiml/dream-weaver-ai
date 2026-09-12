@@ -15,6 +15,10 @@ type MentorChatProps = {
   className?: string;
   /** Extra situation context (current project, scan results...) sent with each message. */
   context?: string;
+  /** Tool buttons rendered above the composer. */
+  toolbar?: React.ReactNode;
+  /** Filled with a function that appends a message into the transcript. */
+  pushRef?: React.MutableRefObject<((message: ChatMessage) => void) | null>;
 };
 
 export function MentorChat({
@@ -24,6 +28,8 @@ export function MentorChat({
   emptyState,
   className = "",
   context,
+  toolbar,
+  pushRef,
 }: MentorChatProps) {
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [input, setInput] = useState("");
@@ -39,6 +45,14 @@ export function MentorChat({
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages, streaming]);
+
+  useEffect(() => {
+    if (!pushRef) return;
+    pushRef.current = (message: ChatMessage) => setMessages((prev) => [...prev, message]);
+    return () => {
+      pushRef.current = null;
+    };
+  }, [pushRef]);
 
   async function persist(role: "user" | "assistant", content: string) {
     if (!persistForUserId) return;
@@ -154,6 +168,8 @@ export function MentorChat({
         )}
         <div ref={bottomRef} />
       </div>
+
+      {toolbar && <div className="rule-top bg-secondary p-3">{toolbar}</div>}
 
       <form
         onSubmit={(e) => {

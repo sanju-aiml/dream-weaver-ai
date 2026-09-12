@@ -5,10 +5,17 @@ import { askGateway, extractJson } from "./ai.server";
 
 export type ScanFinding = {
   severity: "error" | "warning" | "tip";
+  kind?: "syntax" | "logic" | "security" | "style";
   line?: number;
   title: string;
   explanation: string;
   fix: string;
+};
+
+export type ScanResult = {
+  summary: string;
+  findings: ScanFinding[];
+  fixedCode: string;
 };
 
 const SCAN_PROMPT = `You are DreamForge's code doctor. Read the code (and any error log) and find real problems.
@@ -16,12 +23,15 @@ const SCAN_PROMPT = `You are DreamForge's code doctor. Read the code (and any er
 Return ONLY JSON:
 {
   "summary": string,
-  "findings": [{ "severity": "error" | "warning" | "tip", "line": number, "title": string, "explanation": string, "fix": string }]
+  "findings": [{ "severity": "error" | "warning" | "tip", "kind": "syntax" | "logic" | "security" | "style", "line": number, "title": string, "explanation": string, "fix": string }],
+  "fixedCode": string
 }
 
 Rules:
+- Look for all four kinds: syntax errors, logical bugs, security problems (secrets, injection, unsafe input, missing auth checks) and style issues. Label each with "kind".
 - Up to 8 findings, most serious first. If the code is fine, return an empty findings array and say so in summary.
-- "fix" must contain the corrected code snippet, ready to paste.
+- "fix" must contain the corrected code snippet for that one finding, ready to paste.
+- "fixedCode" is the ENTIRE corrected file, complete and runnable, so it can be shown side by side with the original. If nothing needs changing, repeat the original code exactly.
 - Explain in plain, kind language a second-year student understands.
 - No prose outside the JSON.`;
 
@@ -36,6 +46,7 @@ export const scanCode = createServerFn({ method: "POST" })
         language: z.string().min(1),
         code: z.string().min(5),
         errorLog: z.string().optional(),
+        projectId: z.string().uuid().optional(),
       })
       .parse(data),
   )
@@ -62,13 +73,14 @@ export const scanCode = createServerFn({ method: "POST" })
       throw new Error(result.message);
     }
 
-    const parsed = extractJson<{ summary: string; findings: ScanFinding[] }>(result.text);
+    const parsed = extractJson<ScanResult>(result.text);
     if (!parsed) {
       await context.supabase.rpc("spend_tokens", { _amount: -COST, _reason: "refund scan" });
       throw new Error("the scan came back unreadable — try again");
     }
 
     const findings = Array.isArray(parsed.findings) ? parsed.findings : [];
+    const fixedCode = typeof parsed.fixedCode === "string" ? parsed.fixedCode : "";
 
     const { data: row } = await context.supabase
       .from("code_scans")
@@ -83,11 +95,23 @@ export const scanCode = createServerFn({ method: "POST" })
       .select()
       .single();
 
+    await context.supabase.from("messages").insert({
+      user_id: context.userId,
+      role: "assistant",
+      content: `**Error scan of ${data.filename}**\n\n${parsed.summary ?? ""}\n\n${
+        findings.length
+          ? `${findings.length} thing(s) to look at — open Project Studio for the before/after.`
+          : "Nothing broken found."
+      } Cost: ${COST} token.`,
+    });
+
     return {
       id: row?.id ?? null,
       summary: parsed.summary ?? "",
       findings,
+      fixedCode,
       cost: COST,
       tokens: balance,
+      projectId: data.projectId ?? null,
     };
   });

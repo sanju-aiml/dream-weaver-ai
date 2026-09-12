@@ -14,21 +14,62 @@ Cite only papers you are confident exist, in (Author, Year) form. Around 700 wor
   report: `You are DreamForge's report generator. Produce a full college project report outline with written content.
 Sections: Abstract, Introduction, Literature Survey, Methodology, System Design, Implementation, Testing, Results, Conclusion, Future Scope, References.
 Write real paragraphs (not placeholders) based on the topic. Mark any figure or table the student must add as **[ADD YOUR OWN: ...]**. Clean markdown.`,
+  paper: `You are DreamForge's academic paper writer. Write a complete, submission-style academic report for the student's project.
+
+Required sections, in this order, as markdown headings:
+1. Title
+2. Abstract (150-250 words, single paragraph)
+3. Keywords (5-7, comma separated)
+4. Introduction (motivation, problem statement, contributions as a bulleted list)
+5. Related Work (compare 4-6 real, well-known works with (Author, Year) citations)
+6. Methodology (system architecture, modules, algorithms, data flow; describe each module of the actual project)
+7. Implementation (stack, key components, how the modules were built)
+8. Results and Evaluation (evaluation metrics, a markdown results table, and honest discussion — never invent measured numbers, mark each measurable cell as **[ADD YOUR NUMBER]**)
+9. Discussion and Limitations
+10. Conclusion and Future Work
+11. References (numbered, only papers or books you are confident exist; no invented DOIs or URLs)
+
+Write real academic prose, not bullet-point placeholders. Clean markdown, no prose outside the report.`,
 } as const;
 
-const COST = { papers: 1, review: 2, report: 3 } as const;
+const COST = { papers: 1, review: 2, report: 3, paper: 3 } as const;
 
 export const runResearch = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data) =>
     z
       .object({
-        kind: z.enum(["papers", "review", "report"]),
+        kind: z.enum(["papers", "review", "report", "paper"]),
         topic: z.string().min(3),
+        projectId: z.string().uuid().optional(),
       })
       .parse(data),
   )
   .handler(async ({ data, context }) => {
+    let brief = `Topic: ${data.topic}`;
+
+    if (data.projectId) {
+      const { data: project } = await context.supabase
+        .from("projects")
+        .select("title, dream, summary, stack, sprints")
+        .eq("id", data.projectId)
+        .maybeSingle();
+      if (project) {
+        brief = [
+          `Project title: ${project.title}`,
+          `Original dream: ${project.dream}`,
+          project.summary ? `What it does: ${project.summary}` : "",
+          Array.isArray(project.stack) && project.stack.length
+            ? `Stack: ${project.stack.join(", ")}`
+            : "",
+          `Sprint plan: ${JSON.stringify(project.sprints).slice(0, 1500)}`,
+          data.topic ? `Extra notes: ${data.topic}` : "",
+        ]
+          .filter(Boolean)
+          .join("\n");
+      }
+    }
+
     const cost = COST[data.kind];
     const { data: balance, error: spendError } = (await context.supabase.rpc("spend_tokens", {
       _amount: cost,
@@ -41,8 +82,8 @@ export const runResearch = createServerFn({ method: "POST" })
 
     const result = await askGateway({
       instructions: PROMPTS[data.kind],
-      prompt: `Topic: ${data.topic}`,
-      effort: data.kind === "papers" ? "low" : "medium",
+      prompt: brief,
+      effort: data.kind === "papers" ? "low" : data.kind === "paper" ? "high" : "medium",
     });
 
     if (!result.ok || !result.text.trim()) {
@@ -60,6 +101,30 @@ export const runResearch = createServerFn({ method: "POST" })
       })
       .select()
       .single();
+
+    if (data.projectId && (data.kind === "paper" || data.kind === "report")) {
+      await context.supabase
+        .from("projects")
+        .update({ report_content: result.text })
+        .eq("id", data.projectId);
+    }
+
+    const label =
+      data.kind === "paper"
+        ? "Academic report"
+        : data.kind === "report"
+          ? "Project report"
+          : data.kind === "review"
+            ? "Literature review"
+            : "Paper list";
+
+    await context.supabase.from("messages").insert({
+      user_id: context.userId,
+      role: "assistant",
+      content: `**${label} ready — ${data.topic}**\n\nCost: ${cost} tokens. It is saved in your Research shelf${
+        data.projectId ? " and attached to the project" : ""
+      }, and you can download it as a PDF.`,
+    });
 
     return {
       id: row?.id ?? null,
