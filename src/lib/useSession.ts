@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+import { ensureProfile } from "@/lib/workspace";
+
 
 export function useSession() {
   const [session, setSession] = useState<Session | null>(null);
@@ -20,5 +22,11 @@ export function useSession() {
     return () => data.subscription.unsubscribe();
   }, []);
 
+  useEffect(() => {
+    if (!session?.user) return;
+    void ensureProfile(session.user.id, session.user.email);
+  }, [session?.user?.id]);
+
   return { session, loading };
+
 }

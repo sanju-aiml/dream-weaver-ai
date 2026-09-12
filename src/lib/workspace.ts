@@ -27,3 +27,20 @@ export async function getTokens(): Promise<number | null> {
   const { data } = await supabase.from("profiles").select("tokens").maybeSingle();
   return data?.tokens ?? null;
 }
+
+/** Makes sure the signed-in user has a profile row with a starting token balance. */
+export async function ensureProfile(userId: string, email?: string | null): Promise<number | null> {
+  const { data: existing } = await supabase
+    .from("profiles")
+    .select("tokens")
+    .eq("id", userId)
+    .maybeSingle();
+  if (existing) return existing.tokens;
+  const { data, error } = await supabase
+    .from("profiles")
+    .insert({ id: userId, email: email ?? null, tokens: 5 })
+    .select("tokens")
+    .maybeSingle();
+  if (error) return null;
+  return data?.tokens ?? null;
+}

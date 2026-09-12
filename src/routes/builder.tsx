@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
 import { StudioNav } from "@/components/StudioNav";
 import { useSession } from "@/lib/useSession";
-import { getTokens } from "@/lib/workspace";
+import { ensureProfile } from "@/lib/workspace";
 import { forgeProject } from "@/lib/projects.functions";
 import { makeDemoBlobUrl, type ProjectFile } from "@/lib/projects";
 
@@ -47,9 +47,12 @@ function Builder() {
   }, [sessionLoading, session, navigate]);
 
   useEffect(() => {
-    if (!session) return;
-    getTokens().then(setTokens).catch(() => setTokens(null));
-  }, [session]);
+    if (!session?.user) return;
+    ensureProfile(session.user.id, session.user.email)
+      .then((t) => setTokens(t ?? 0))
+      .catch(() => setTokens(null));
+  }, [session?.user?.id]);
+
 
   useEffect(() => {
     if (!result) return;
