@@ -58,7 +58,20 @@ export function VisionOverlay({ open, onClose }: { open: boolean; onClose: () =>
         <X className="h-5 w-5" />
       </button>
 
-      {error ? (
+      {!error && (
+        <video
+          ref={videoRef}
+          src={VIDEO_URL}
+          autoPlay
+          muted
+          playsInline
+          onEnded={() => setEnded(true)}
+          onError={() => setError(true)}
+          className={`pointer-events-none absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${ended ? "opacity-40" : "opacity-100"}`}
+        />
+      )}
+
+      {error && !ended && (
         <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center px-6 text-center text-white">
           <div className="pointer-events-auto">
             <p className="text-lg">The cinematic preview could not load in this browser.</p>
@@ -71,17 +84,6 @@ export function VisionOverlay({ open, onClose }: { open: boolean; onClose: () =>
             </button>
           </div>
         </div>
-      ) : (
-        <video
-          ref={videoRef}
-          src={VIDEO_URL}
-          autoPlay
-          muted
-          playsInline
-          onEnded={() => setEnded(true)}
-          onError={() => setError(true)}
-          className={`pointer-events-none absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${ended ? "opacity-40" : "opacity-100"}`}
-        />
       )}
 
       <div
