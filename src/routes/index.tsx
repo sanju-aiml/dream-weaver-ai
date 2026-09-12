@@ -11,7 +11,7 @@ import {
   Users,
 } from "lucide-react";
 import { MentorChat } from "@/components/MentorChat";
-import { VisionOverlay } from "@/components/VisionOverlay";
+import { VisionBackground } from "@/components/VisionBackground";
 import mark from "@/assets/dreamforge-mark.png";
 
 export const Route = createFileRoute("/")({
