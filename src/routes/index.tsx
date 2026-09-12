@@ -1,5 +1,4 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
 import {
   Bug,
   GraduationCap,
@@ -11,7 +10,7 @@ import {
   Users,
 } from "lucide-react";
 import { MentorChat } from "@/components/MentorChat";
-import { VisionOverlay } from "@/components/VisionOverlay";
+import { VisionBackground } from "@/components/VisionBackground";
 import mark from "@/assets/dreamforge-mark.png";
 
 export const Route = createFileRoute("/")({
@@ -83,8 +82,6 @@ const plans = [
 ];
 
 function Landing() {
-  const [visionOpen, setVisionOpen] = useState(false);
-
   return (
     <div className="min-h-screen">
       <header className="flex items-center justify-between border-b-2 border-border px-4 py-3 sm:px-8">
@@ -108,9 +105,10 @@ function Landing() {
         </nav>
       </header>
 
-      <section className="grid gap-10 px-4 py-12 sm:px-8 lg:grid-cols-[1.05fr_1fr] lg:py-20">
-        <div>
-          <p className="font-display text-xs tracking-[0.3em] text-accent uppercase">
+      <VisionBackground>
+      <section className="grid gap-10 px-4 py-16 sm:px-8 lg:grid-cols-[1.05fr_1fr] lg:py-28">
+        <div className="text-white">
+          <p className="font-display text-xs tracking-[0.3em] text-highlight uppercase">
             Dream in. Project out.
           </p>
           <h1 className="mt-5 text-5xl leading-[0.92] sm:text-7xl">
@@ -120,7 +118,7 @@ function Landing() {
             <br />
             with a project.
           </h1>
-          <p className="mt-6 max-w-xl text-lg text-muted-foreground">
+          <p className="mt-6 max-w-xl text-lg text-white/75">
             One talkative AI agent that plans, builds, tests, teaches, fixes your broken code,
             writes the report, designs the poster — and then introduces you to founders who are
             hiring.
@@ -132,15 +130,15 @@ function Landing() {
             >
               Forge my project
             </Link>
-            <button
-              type="button"
-              onClick={() => setVisionOpen(true)}
-              className="brut bg-card px-6 py-4 font-display text-sm uppercase transition-transform hover:-translate-y-1"
+            <a
+              href="#demo"
+              className="brut bg-card px-6 py-4 font-display text-sm text-foreground uppercase transition-transform hover:-translate-y-1"
             >
-              VISION
-            </button>
+              Try the mentor
+            </a>
           </div>
-          <dl className="mt-12 grid grid-cols-3 gap-4 border-t-2 border-border pt-6">
+          <p className="mt-6 text-xs text-white/50">Scroll to travel from orbit to the forest floor.</p>
+          <dl className="mt-10 grid grid-cols-3 gap-4 border-t-2 border-white/25 pt-6">
             {[
               ["Agile", "MVP first, then sprints"],
               ["24/7", "Mentor never sleeps"],
@@ -148,7 +146,7 @@ function Landing() {
             ].map(([k, v]) => (
               <div key={k}>
                 <dt className="font-display text-lg">{k}</dt>
-                <dd className="text-xs text-muted-foreground">{v}</dd>
+                <dd className="text-xs text-white/60">{v}</dd>
               </div>
             ))}
           </dl>
@@ -178,6 +176,7 @@ function Landing() {
           />
         </div>
       </section>
+      </VisionBackground>
 
       <section className="border-y-2 border-border bg-primary px-4 py-14 text-primary-foreground sm:px-8">
         <div className="grid gap-8 md:grid-cols-3">
@@ -267,7 +266,6 @@ function Landing() {
         </div>
       </footer>
 
-      <VisionOverlay open={visionOpen} onClose={() => setVisionOpen(false)} />
     </div>
   );
 }
