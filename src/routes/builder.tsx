@@ -6,7 +6,12 @@ import { StudioNav } from "@/components/StudioNav";
 import { useSession } from "@/lib/useSession";
 import { ensureProfile } from "@/lib/workspace";
 import { forgeProject } from "@/lib/projects.functions";
-import { makeDemoBlobUrl, type ProjectFile } from "@/lib/projects";
+import { refinePrompt } from "@/lib/prompt.functions";
+import { listProjects, makeDemoBlobUrl, type ProjectFile } from "@/lib/projects";
+import { Wand2 } from "lucide-react";
+
+const STUDYSPARK_DREAM =
+  "An AI-powered Smart Study Assistant for college students. Students enter a subject or topic and get a personalised study plan, summarised learning material, quizzes and flashcards, progress tracking, and an AI mentor that explains difficult concepts step by step.";
 
 export const Route = createFileRoute("/builder")({
   head: () => ({
