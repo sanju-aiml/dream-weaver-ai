@@ -83,8 +83,6 @@ const plans = [
 ];
 
 function Landing() {
-  const [visionOpen, setVisionOpen] = useState(false);
-
   return (
     <div className="min-h-screen">
       <header className="flex items-center justify-between border-b-2 border-border px-4 py-3 sm:px-8">
