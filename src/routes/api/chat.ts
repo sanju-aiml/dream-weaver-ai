@@ -16,8 +16,9 @@ export const Route = createFileRoute("/api/chat")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const body = (await request.json()) as { messages?: ChatMessage[] };
+        const body = (await request.json()) as { messages?: ChatMessage[]; context?: string };
         const messages = Array.isArray(body.messages) ? body.messages : null;
+        const context = typeof body.context === "string" ? body.context.slice(0, 6000) : "";
         if (!messages || messages.length === 0) {
           return new Response("Messages are required", { status: 400 });
         }
@@ -46,7 +47,9 @@ export const Route = createFileRoute("/api/chat")({
           },
           body: JSON.stringify({
             model: "openai/gpt-6-astra",
-            instructions: SYSTEM_PROMPT,
+            instructions: context
+              ? `${SYSTEM_PROMPT}\n\nCurrent workspace context you should use:\n${context}`
+              : SYSTEM_PROMPT,
             input,
             stream: true,
             store: false,

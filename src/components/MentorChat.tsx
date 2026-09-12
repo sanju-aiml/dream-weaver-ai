@@ -13,6 +13,8 @@ type MentorChatProps = {
   suggestions?: string[];
   emptyState?: React.ReactNode;
   className?: string;
+  /** Extra situation context (current project, scan results...) sent with each message. */
+  context?: string;
 };
 
 export function MentorChat({
@@ -21,6 +23,7 @@ export function MentorChat({
   suggestions = [],
   emptyState,
   className = "",
+  context,
 }: MentorChatProps) {
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [input, setInput] = useState("");
@@ -59,7 +62,7 @@ export function MentorChat({
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: next }),
+        body: JSON.stringify({ messages: next, context }),
         signal: controller.signal,
       });
 
