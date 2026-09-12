@@ -1,10 +1,21 @@
 import { createFileRoute, Link, useParams } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { useServerFn } from "@tanstack/react-start";
 import { StudioNav } from "@/components/StudioNav";
+import { ScanReport } from "@/components/ScanReport";
 import { useSession } from "@/lib/useSession";
 import { getProject, type Project, makeDemoBlobUrl } from "@/lib/projects";
 import { getTokens } from "@/lib/workspace";
+import { scanCode, type ScanFinding } from "@/lib/scans.functions";
+
+function guessLanguage(path: string) {
+  if (path.endsWith(".py")) return "python";
+  if (path.endsWith(".html")) return "html";
+  if (path.endsWith(".css")) return "css";
+  if (path.endsWith(".ts") || path.endsWith(".tsx")) return "typescript";
+  return "javascript";
+}
 
 export const Route = createFileRoute("/projects/$id")({
   head: ({ params }) => ({
