@@ -39,6 +39,44 @@ function ProjectDetail() {
   const [loading, setLoading] = useState(true);
   const [activeFile, setActiveFile] = useState(0);
   const [demoUrl, setDemoUrl] = useState<string | null>(null);
+  const runScan = useServerFn(scanCode);
+  const [scanning, setScanning] = useState(false);
+  const [scan, setScan] = useState<
+    { summary: string; findings: ScanFinding[]; fixedCode: string; filename: string; original: string } | null
+  >(null);
+
+  async function handleScan() {
+    const file = project?.files[activeFile];
+    if (!file) return;
+    setScanning(true);
+    setScan(null);
+    try {
+      const res = await runScan({
+        data: {
+          filename: file.path,
+          language: guessLanguage(file.path),
+          code: file.code,
+          projectId: id,
+        },
+      });
+      setScan({
+        summary: res.summary,
+        findings: res.findings,
+        fixedCode: res.fixedCode,
+        filename: file.path,
+        original: file.code,
+      });
+      const bal = await getTokens();
+      setTokens(bal);
+      toast.success(`Scanned ${file.path}`);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Scan failed.";
+      toast.error(message.includes("insufficient") ? "Not enough tokens for a scan." : message.slice(0, 160));
+    } finally {
+      setScanning(false);
+    }
+  }
+
 
   useEffect(() => {
     Promise.all([getProject(id), getTokens()])
