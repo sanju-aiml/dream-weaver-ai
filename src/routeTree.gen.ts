@@ -13,9 +13,11 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AssetsRouteImport } from './routes/assets'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BuilderRouteImport } from './routes/builder'
+import { Route as CoursesRouteImport } from './routes/courses'
 import { Route as ProjectStudioRouteImport } from './routes/project-studio'
 import { Route as ResearchRouteImport } from './routes/research'
 import { Route as StudioRouteImport } from './routes/studio'
+import { Route as TalentRouteImport } from './routes/talent'
 import { Route as TokensRouteImport } from './routes/tokens'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as ApiGenerateProjectRouteImport } from './routes/api/generate-project'
@@ -44,6 +46,11 @@ const BuilderRoute = BuilderRouteImport.update({
   path: '/builder',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CoursesRoute = CoursesRouteImport.update({
+  id: '/courses',
+  path: '/courses',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProjectStudioRoute = ProjectStudioRouteImport.update({
   id: '/project-studio',
   path: '/project-studio',
@@ -57,6 +64,11 @@ const ResearchRoute = ResearchRouteImport.update({
 const StudioRoute = StudioRouteImport.update({
   id: '/studio',
   path: '/studio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TalentRoute = TalentRouteImport.update({
+  id: '/talent',
+  path: '/talent',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TokensRoute = TokensRouteImport.update({
@@ -100,9 +112,11 @@ export interface FileRoutesByFullPath {
   '/assets': typeof AssetsRoute
   '/auth': typeof AuthRoute
   '/builder': typeof BuilderRoute
+  '/courses': typeof CoursesRoute
   '/project-studio': typeof ProjectStudioRoute
   '/research': typeof ResearchRoute
   '/studio': typeof StudioRoute
+  '/talent': typeof TalentRoute
   '/tokens': typeof TokensRoute
   '/api/chat': typeof ApiChatRoute
   '/api/generate-project': typeof ApiGenerateProjectRoute
@@ -116,9 +130,11 @@ export interface FileRoutesByTo {
   '/assets': typeof AssetsRoute
   '/auth': typeof AuthRoute
   '/builder': typeof BuilderRoute
+  '/courses': typeof CoursesRoute
   '/project-studio': typeof ProjectStudioRoute
   '/research': typeof ResearchRoute
   '/studio': typeof StudioRoute
+  '/talent': typeof TalentRoute
   '/tokens': typeof TokensRoute
   '/api/chat': typeof ApiChatRoute
   '/api/generate-project': typeof ApiGenerateProjectRoute
@@ -133,9 +149,11 @@ export interface FileRoutesById {
   '/assets': typeof AssetsRoute
   '/auth': typeof AuthRoute
   '/builder': typeof BuilderRoute
+  '/courses': typeof CoursesRoute
   '/project-studio': typeof ProjectStudioRoute
   '/research': typeof ResearchRoute
   '/studio': typeof StudioRoute
+  '/talent': typeof TalentRoute
   '/tokens': typeof TokensRoute
   '/api/chat': typeof ApiChatRoute
   '/api/generate-project': typeof ApiGenerateProjectRoute
@@ -151,9 +169,11 @@ export interface FileRouteTypes {
     | '/assets'
     | '/auth'
     | '/builder'
+    | '/courses'
     | '/project-studio'
     | '/research'
     | '/studio'
+    | '/talent'
     | '/tokens'
     | '/api/chat'
     | '/api/generate-project'
@@ -167,9 +187,11 @@ export interface FileRouteTypes {
     | '/assets'
     | '/auth'
     | '/builder'
+    | '/courses'
     | '/project-studio'
     | '/research'
     | '/studio'
+    | '/talent'
     | '/tokens'
     | '/api/chat'
     | '/api/generate-project'
@@ -183,9 +205,11 @@ export interface FileRouteTypes {
     | '/assets'
     | '/auth'
     | '/builder'
+    | '/courses'
     | '/project-studio'
     | '/research'
     | '/studio'
+    | '/talent'
     | '/tokens'
     | '/api/chat'
     | '/api/generate-project'
@@ -200,9 +224,11 @@ export interface RootRouteChildren {
   AssetsRoute: typeof AssetsRoute
   AuthRoute: typeof AuthRoute
   BuilderRoute: typeof BuilderRoute
+  CoursesRoute: typeof CoursesRoute
   ProjectStudioRoute: typeof ProjectStudioRoute
   ResearchRoute: typeof ResearchRoute
   StudioRoute: typeof StudioRoute
+  TalentRoute: typeof TalentRoute
   TokensRoute: typeof TokensRoute
   ApiChatRoute: typeof ApiChatRoute
   ApiGenerateProjectRoute: typeof ApiGenerateProjectRoute
@@ -242,6 +268,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BuilderRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/courses': {
+      id: '/courses'
+      path: '/courses'
+      fullPath: '/courses'
+      preLoaderRoute: typeof CoursesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/project-studio': {
       id: '/project-studio'
       path: '/project-studio'
@@ -261,6 +294,13 @@ declare module '@tanstack/react-router' {
       path: '/studio'
       fullPath: '/studio'
       preLoaderRoute: typeof StudioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/talent': {
+      id: '/talent'
+      path: '/talent'
+      fullPath: '/talent'
+      preLoaderRoute: typeof TalentRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tokens': {
@@ -320,9 +360,11 @@ const rootRouteChildren: RootRouteChildren = {
   AssetsRoute: AssetsRoute,
   AuthRoute: AuthRoute,
   BuilderRoute: BuilderRoute,
+  CoursesRoute: CoursesRoute,
   ProjectStudioRoute: ProjectStudioRoute,
   ResearchRoute: ResearchRoute,
   StudioRoute: StudioRoute,
+  TalentRoute: TalentRoute,
   TokensRoute: TokensRoute,
   ApiChatRoute: ApiChatRoute,
   ApiGenerateProjectRoute: ApiGenerateProjectRoute,
