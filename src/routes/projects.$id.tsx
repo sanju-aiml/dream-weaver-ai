@@ -175,8 +175,29 @@ function ProjectDetail() {
             <pre className="mt-3 max-h-[360px] overflow-auto bg-[#0a0a0a] p-3 text-xs text-[#e8e8e8]">
               <code>{project.files[activeFile]?.code ?? ""}</code>
             </pre>
+            <button
+              type="button"
+              onClick={handleScan}
+              disabled={scanning}
+              className="brut mt-3 bg-accent px-4 py-2 font-display text-xs tracking-widest text-accent-foreground uppercase disabled:opacity-60"
+            >
+              {scanning ? "Scanning…" : "Run error scan (1 token)"}
+            </button>
           </section>
         </div>
+
+        {scan ? (
+          <section className="mt-6">
+            <ScanReport
+              summary={scan.summary}
+              findings={scan.findings}
+              originalCode={scan.original}
+              fixedCode={scan.fixedCode}
+              filename={scan.filename}
+            />
+          </section>
+        ) : null}
+
 
         <section className="mt-6 brut bg-card p-4">
           <h2 className="text-sm">Sprints</h2>
