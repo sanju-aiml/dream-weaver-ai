@@ -47,6 +47,41 @@ export type Database = {
         }
         Relationships: []
       }
+      founder_interests: {
+        Row: {
+          created_at: string
+          founder_id: string
+          id: string
+          message: string
+          project_id: string | null
+          student_id: string
+        }
+        Insert: {
+          created_at?: string
+          founder_id: string
+          id?: string
+          message?: string
+          project_id?: string | null
+          student_id: string
+        }
+        Update: {
+          created_at?: string
+          founder_id?: string
+          id?: string
+          message?: string
+          project_id?: string | null
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "founder_interests_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       messages: {
         Row: {
           content: string
@@ -103,11 +138,13 @@ export type Database = {
           assets: Json
           cost: number
           created_at: string
+          deck: Json
           demo_url: string | null
           dream: string
           files: Json
           id: string
           report_content: string | null
+          shared: boolean
           sprints: Json
           stack: string[]
           summary: string | null
@@ -118,11 +155,13 @@ export type Database = {
           assets?: Json
           cost?: number
           created_at?: string
+          deck?: Json
           demo_url?: string | null
           dream: string
           files?: Json
           id?: string
           report_content?: string | null
+          shared?: boolean
           sprints?: Json
           stack?: string[]
           summary?: string | null
@@ -133,11 +172,13 @@ export type Database = {
           assets?: Json
           cost?: number
           created_at?: string
+          deck?: Json
           demo_url?: string | null
           dream?: string
           files?: Json
           id?: string
           report_content?: string | null
+          shared?: boolean
           sprints?: Json
           stack?: string[]
           summary?: string | null
@@ -169,6 +210,45 @@ export type Database = {
           id?: string
           kind?: string
           topic?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      talent_profiles: {
+        Row: {
+          available: boolean
+          bio: string
+          college: string
+          contact: string
+          display_name: string
+          headline: string
+          looking_for: string
+          skills: string[]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          available?: boolean
+          bio?: string
+          college?: string
+          contact?: string
+          display_name?: string
+          headline?: string
+          looking_for?: string
+          skills?: string[]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          available?: boolean
+          bio?: string
+          college?: string
+          contact?: string
+          display_name?: string
+          headline?: string
+          looking_for?: string
+          skills?: string[]
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
