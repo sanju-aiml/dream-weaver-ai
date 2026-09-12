@@ -15,6 +15,10 @@ type MentorChatProps = {
   className?: string;
   /** Extra situation context (current project, scan results...) sent with each message. */
   context?: string;
+  /** Tool buttons rendered above the composer. */
+  toolbar?: React.ReactNode;
+  /** Filled with a function that appends a message into the transcript. */
+  pushRef?: React.MutableRefObject<((message: ChatMessage) => void) | null>;
 };
 
 export function MentorChat({
