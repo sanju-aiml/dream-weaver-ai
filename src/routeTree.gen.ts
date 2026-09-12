@@ -11,11 +11,17 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as BuilderRouteImport } from './routes/builder'
+import { Route as ProjectStudioRouteImport } from './routes/project-studio'
+import { Route as ProjectsRouteImport } from './routes/projects'
+import { Route as ResearchRouteImport } from './routes/research'
 import { Route as StudioRouteImport } from './routes/studio'
+import { Route as TokensRouteImport } from './routes/tokens'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as ApiGenerateProjectRouteImport } from './routes/api/generate-project'
 import { Route as ApiResearchRouteImport } from './routes/api/research'
 import { Route as ApiScanCodeRouteImport } from './routes/api/scan-code'
+import { Route as ProjectsIdRouteImport } from './routes/projects.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -27,9 +33,34 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BuilderRoute = BuilderRouteImport.update({
+  id: '/builder',
+  path: '/builder',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProjectStudioRoute = ProjectStudioRouteImport.update({
+  id: '/project-studio',
+  path: '/project-studio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProjectsRoute = ProjectsRouteImport.update({
+  id: '/projects',
+  path: '/projects',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResearchRoute = ResearchRouteImport.update({
+  id: '/research',
+  path: '/research',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StudioRoute = StudioRouteImport.update({
   id: '/studio',
   path: '/studio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TokensRoute = TokensRouteImport.update({
+  id: '/tokens',
+  path: '/tokens',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiChatRoute = ApiChatRouteImport.update({
@@ -52,69 +83,115 @@ const ApiScanCodeRoute = ApiScanCodeRouteImport.update({
   path: '/api/scan-code',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProjectsIdRoute = ProjectsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ProjectsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/builder': typeof BuilderRoute
+  '/project-studio': typeof ProjectStudioRoute
+  '/projects': typeof ProjectsRouteWithChildren
+  '/research': typeof ResearchRoute
   '/studio': typeof StudioRoute
+  '/tokens': typeof TokensRoute
   '/api/chat': typeof ApiChatRoute
   '/api/generate-project': typeof ApiGenerateProjectRoute
   '/api/research': typeof ApiResearchRoute
   '/api/scan-code': typeof ApiScanCodeRoute
+  '/projects/$id': typeof ProjectsIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/builder': typeof BuilderRoute
+  '/project-studio': typeof ProjectStudioRoute
+  '/projects': typeof ProjectsRouteWithChildren
+  '/research': typeof ResearchRoute
   '/studio': typeof StudioRoute
+  '/tokens': typeof TokensRoute
   '/api/chat': typeof ApiChatRoute
   '/api/generate-project': typeof ApiGenerateProjectRoute
   '/api/research': typeof ApiResearchRoute
   '/api/scan-code': typeof ApiScanCodeRoute
+  '/projects/$id': typeof ProjectsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/builder': typeof BuilderRoute
+  '/project-studio': typeof ProjectStudioRoute
+  '/projects': typeof ProjectsRouteWithChildren
+  '/research': typeof ResearchRoute
   '/studio': typeof StudioRoute
+  '/tokens': typeof TokensRoute
   '/api/chat': typeof ApiChatRoute
   '/api/generate-project': typeof ApiGenerateProjectRoute
   '/api/research': typeof ApiResearchRoute
   '/api/scan-code': typeof ApiScanCodeRoute
+  '/projects/$id': typeof ProjectsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/auth'
+    | '/builder'
+    | '/project-studio'
+    | '/projects'
+    | '/research'
     | '/studio'
+    | '/tokens'
     | '/api/chat'
     | '/api/generate-project'
     | '/api/research'
     | '/api/scan-code'
+    | '/projects/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
+    | '/builder'
+    | '/project-studio'
+    | '/projects'
+    | '/research'
     | '/studio'
+    | '/tokens'
     | '/api/chat'
     | '/api/generate-project'
     | '/api/research'
     | '/api/scan-code'
+    | '/projects/$id'
   id:
     | '__root__'
     | '/'
     | '/auth'
+    | '/builder'
+    | '/project-studio'
+    | '/projects'
+    | '/research'
     | '/studio'
+    | '/tokens'
     | '/api/chat'
     | '/api/generate-project'
     | '/api/research'
     | '/api/scan-code'
+    | '/projects/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
+  BuilderRoute: typeof BuilderRoute
+  ProjectStudioRoute: typeof ProjectStudioRoute
+  ProjectsRoute: typeof ProjectsRouteWithChildren
+  ResearchRoute: typeof ResearchRoute
   StudioRoute: typeof StudioRoute
+  TokensRoute: typeof TokensRoute
   ApiChatRoute: typeof ApiChatRoute
   ApiGenerateProjectRoute: typeof ApiGenerateProjectRoute
   ApiResearchRoute: typeof ApiResearchRoute
@@ -137,11 +214,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/builder': {
+      id: '/builder'
+      path: '/builder'
+      fullPath: '/builder'
+      preLoaderRoute: typeof BuilderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/project-studio': {
+      id: '/project-studio'
+      path: '/project-studio'
+      fullPath: '/project-studio'
+      preLoaderRoute: typeof ProjectStudioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/projects': {
+      id: '/projects'
+      path: '/projects'
+      fullPath: '/projects'
+      preLoaderRoute: typeof ProjectsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/research': {
+      id: '/research'
+      path: '/research'
+      fullPath: '/research'
+      preLoaderRoute: typeof ResearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/studio': {
       id: '/studio'
       path: '/studio'
       fullPath: '/studio'
       preLoaderRoute: typeof StudioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tokens': {
+      id: '/tokens'
+      path: '/tokens'
+      fullPath: '/tokens'
+      preLoaderRoute: typeof TokensRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/chat': {
@@ -172,13 +284,37 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiScanCodeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/projects/$id': {
+      id: '/projects/$id'
+      path: '/$id'
+      fullPath: '/projects/$id'
+      preLoaderRoute: typeof ProjectsIdRouteImport
+      parentRoute: typeof ProjectsRoute
+    }
   }
 }
+
+interface ProjectsRouteChildren {
+  ProjectsIdRoute: typeof ProjectsIdRoute
+}
+
+const ProjectsRouteChildren: ProjectsRouteChildren = {
+  ProjectsIdRoute: ProjectsIdRoute,
+}
+
+const ProjectsRouteWithChildren = ProjectsRoute._addFileChildren(
+  ProjectsRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
+  BuilderRoute: BuilderRoute,
+  ProjectStudioRoute: ProjectStudioRoute,
+  ProjectsRoute: ProjectsRouteWithChildren,
+  ResearchRoute: ResearchRoute,
   StudioRoute: StudioRoute,
+  TokensRoute: TokensRoute,
   ApiChatRoute: ApiChatRoute,
   ApiGenerateProjectRoute: ApiGenerateProjectRoute,
   ApiResearchRoute: ApiResearchRoute,
