@@ -13,6 +13,9 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as StudioRouteImport } from './routes/studio'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as ApiGenerateProjectRouteImport } from './routes/api/generate-project'
+import { Route as ApiResearchRouteImport } from './routes/api/research'
+import { Route as ApiScanCodeRouteImport } from './routes/api/scan-code'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -34,18 +37,39 @@ const ApiChatRoute = ApiChatRouteImport.update({
   path: '/api/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiGenerateProjectRoute = ApiGenerateProjectRouteImport.update({
+  id: '/api/generate-project',
+  path: '/api/generate-project',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiResearchRoute = ApiResearchRouteImport.update({
+  id: '/api/research',
+  path: '/api/research',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiScanCodeRoute = ApiScanCodeRouteImport.update({
+  id: '/api/scan-code',
+  path: '/api/scan-code',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/studio': typeof StudioRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/generate-project': typeof ApiGenerateProjectRoute
+  '/api/research': typeof ApiResearchRoute
+  '/api/scan-code': typeof ApiScanCodeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/studio': typeof StudioRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/generate-project': typeof ApiGenerateProjectRoute
+  '/api/research': typeof ApiResearchRoute
+  '/api/scan-code': typeof ApiScanCodeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +77,38 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/studio': typeof StudioRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/generate-project': typeof ApiGenerateProjectRoute
+  '/api/research': typeof ApiResearchRoute
+  '/api/scan-code': typeof ApiScanCodeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/studio' | '/api/chat'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/studio'
+    | '/api/chat'
+    | '/api/generate-project'
+    | '/api/research'
+    | '/api/scan-code'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/studio' | '/api/chat'
-  id: '__root__' | '/' | '/auth' | '/studio' | '/api/chat'
+  to:
+    | '/'
+    | '/auth'
+    | '/studio'
+    | '/api/chat'
+    | '/api/generate-project'
+    | '/api/research'
+    | '/api/scan-code'
+  id:
+    | '__root__'
+    | '/'
+    | '/auth'
+    | '/studio'
+    | '/api/chat'
+    | '/api/generate-project'
+    | '/api/research'
+    | '/api/scan-code'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,6 +116,9 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   StudioRoute: typeof StudioRoute
   ApiChatRoute: typeof ApiChatRoute
+  ApiGenerateProjectRoute: typeof ApiGenerateProjectRoute
+  ApiResearchRoute: typeof ApiResearchRoute
+  ApiScanCodeRoute: typeof ApiScanCodeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -99,6 +151,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiChatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/generate-project': {
+      id: '/api/generate-project'
+      path: '/api/generate-project'
+      fullPath: '/api/generate-project'
+      preLoaderRoute: typeof ApiGenerateProjectRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/research': {
+      id: '/api/research'
+      path: '/api/research'
+      fullPath: '/api/research'
+      preLoaderRoute: typeof ApiResearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/scan-code': {
+      id: '/api/scan-code'
+      path: '/api/scan-code'
+      fullPath: '/api/scan-code'
+      preLoaderRoute: typeof ApiScanCodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -107,6 +180,9 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   StudioRoute: StudioRoute,
   ApiChatRoute: ApiChatRoute,
+  ApiGenerateProjectRoute: ApiGenerateProjectRoute,
+  ApiResearchRoute: ApiResearchRoute,
+  ApiScanCodeRoute: ApiScanCodeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
