@@ -6,7 +6,12 @@ import { StudioNav } from "@/components/StudioNav";
 import { useSession } from "@/lib/useSession";
 import { ensureProfile } from "@/lib/workspace";
 import { forgeProject } from "@/lib/projects.functions";
-import { makeDemoBlobUrl, type ProjectFile } from "@/lib/projects";
+import { refinePrompt } from "@/lib/prompt.functions";
+import { listProjects, makeDemoBlobUrl, type ProjectFile } from "@/lib/projects";
+import { Wand2 } from "lucide-react";
+
+const STUDYSPARK_DREAM =
+  "An AI-powered Smart Study Assistant for college students. Students enter a subject or topic and get a personalised study plan, summarised learning material, quizzes and flashcards, progress tracking, and an AI mentor that explains difficult concepts step by step.";
 
 export const Route = createFileRoute("/builder")({
   head: () => ({
@@ -33,7 +38,9 @@ function Builder() {
   const navigate = useNavigate();
   const { session, loading: sessionLoading } = useSession();
   const forge = useServerFn(forgeProject);
+  const sharpen = useServerFn(refinePrompt);
   const [dream, setDream] = useState("");
+  const [refining, setRefining] = useState(false);
   const [tokens, setTokens] = useState<number | null>(null);
   const [working, setWorking] = useState(false);
   const [result, setResult] = useState<{
@@ -43,7 +50,7 @@ function Builder() {
   const [demoUrl, setDemoUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!sessionLoading && !session) void navigate({ to: "/auth" });
+    if (!sessionLoading && !session) void navigate({ to: "/auth", search: { next: "/builder" } });
   }, [sessionLoading, session, navigate]);
 
   useEffect(() => {
@@ -51,6 +58,12 @@ function Builder() {
     ensureProfile(session.user.id, session.user.email)
       .then((t) => setTokens(t ?? 0))
       .catch(() => setTokens(null));
+    // Brand-new builders start with the StudySpark brief already in the box.
+    void listProjects()
+      .then((list) => {
+        if (list.length === 0) setDream((d) => d || STUDYSPARK_DREAM);
+      })
+      .catch(() => undefined);
   }, [session?.user?.id]);
 
 

@@ -98,6 +98,7 @@ function Landing() {
           </a>
           <Link
             to="/auth"
+            search={{ next: "/builder" }}
             className="brut-sm bg-accent px-3 py-2 font-display text-xs text-accent-foreground uppercase"
           >
             Start free
@@ -126,16 +127,18 @@ function Landing() {
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               to="/auth"
+              search={{ next: "/builder" }}
               className="brut bg-accent px-6 py-4 font-display text-sm text-accent-foreground uppercase transition-transform hover:-translate-y-1"
             >
               Forge my project
             </Link>
-            <a
-              href="#demo"
+            <Link
+              to="/auth"
+              search={{ next: "/studio" }}
               className="brut bg-card px-6 py-4 font-display text-sm text-foreground uppercase transition-transform hover:-translate-y-1"
             >
               Try the mentor
-            </a>
+            </Link>
           </div>
           <p className="mt-6 text-xs text-white/50">Scroll to travel from orbit to the forest floor.</p>
           <dl className="mt-10 grid grid-cols-3 gap-4 border-t-2 border-white/25 pt-6">
@@ -247,6 +250,7 @@ function Landing() {
               </ul>
               <Link
                 to="/auth"
+                search={{ next: "/builder" }}
                 className="brut-sm mt-6 inline-block bg-primary px-4 py-2 font-display text-xs text-primary-foreground uppercase"
               >
                 Get started
@@ -260,7 +264,7 @@ function Landing() {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <p className="font-display">DreamForge AI</p>
           <p className="text-muted-foreground">Build. Learn. Fix. Get hired.</p>
-          <Link to="/auth" className="underline underline-offset-4">
+          <Link to="/auth" search={{ next: "/builder" }} className="underline underline-offset-4">
             Create your account
           </Link>
         </div>

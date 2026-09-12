@@ -6,6 +6,9 @@ import { lovable } from "@/integrations/lovable/index";
 import mark from "@/assets/dreamforge-mark.png";
 
 export const Route = createFileRoute("/auth")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    next: typeof search["next"] === "string" ? (search["next"] as string) : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Sign in — DreamForge AI" },
@@ -28,17 +31,21 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const navigate = useNavigate();
+  const { next } = Route.useSearch();
   const [mode, setMode] = useState<"signin" | "signup">("signup");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
 
+  /** Where to land after signing in: the requested page, else straight into the builder. */
+  const dest = (next && next.startsWith("/") ? next : "/builder") as "/builder";
+
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) void navigate({ to: "/studio" });
+      if (session) void navigate({ to: dest });
     });
-  }, [navigate]);
+  }, [navigate, dest]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -49,13 +56,13 @@ function AuthPage() {
           email,
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/studio`,
+            emailRedirectTo: `${window.location.origin}${dest}`,
             data: { display_name: name || email.split("@")[0] },
           },
         });
         if (error) throw error;
         if (data.session) {
-          void navigate({ to: "/studio" });
+          void navigate({ to: dest });
         } else {
           toast.success("Check your inbox to confirm your email, then sign in.");
           setMode("signin");
@@ -63,7 +70,7 @@ function AuthPage() {
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        void navigate({ to: "/studio" });
+        void navigate({ to: dest });
       }
     } catch (error) {
       toast.error((error as Error).message);
@@ -74,14 +81,14 @@ function AuthPage() {
 
   async function handleGoogle() {
     const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
+      redirect_uri: `${window.location.origin}/auth?next=${encodeURIComponent(dest)}`,
     });
     if (result.error) {
       toast.error("Google sign-in failed. Try email instead.");
       return;
     }
     if (result.redirected) return;
-    void navigate({ to: "/studio" });
+    void navigate({ to: dest });
   }
 
   return (

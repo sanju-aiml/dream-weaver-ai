@@ -9,6 +9,9 @@ const LINKS = [
   { to: "/project-studio", label: "Project Studio" },
   { to: "/research", label: "Research" },
   { to: "/assets", label: "Slides" },
+  { to: "/courses", label: "Courses" },
+  { to: "/talent", label: "Talent" },
+  { to: "/founders", label: "Founders" },
   { to: "/tokens", label: "Tokens" },
 ] as const;
 
