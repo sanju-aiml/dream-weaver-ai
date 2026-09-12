@@ -100,10 +100,14 @@ export type Database = {
       }
       projects: {
         Row: {
+          assets: Json
+          cost: number
           created_at: string
+          demo_url: string | null
           dream: string
           files: Json
           id: string
+          report_content: string | null
           sprints: Json
           stack: string[]
           summary: string | null
@@ -111,10 +115,14 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          assets?: Json
+          cost?: number
           created_at?: string
+          demo_url?: string | null
           dream: string
           files?: Json
           id?: string
+          report_content?: string | null
           sprints?: Json
           stack?: string[]
           summary?: string | null
@@ -122,10 +130,14 @@ export type Database = {
           user_id: string
         }
         Update: {
+          assets?: Json
+          cost?: number
           created_at?: string
+          demo_url?: string | null
           dream?: string
           files?: Json
           id?: string
+          report_content?: string | null
           sprints?: Json
           stack?: string[]
           summary?: string | null

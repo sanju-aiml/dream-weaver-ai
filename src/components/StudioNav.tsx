@@ -5,12 +5,19 @@ import mark from "@/assets/dreamforge-mark.png";
 const LINKS = [
   { to: "/studio", label: "Mentor" },
   { to: "/builder", label: "Builder" },
+  { to: "/projects", label: "My Projects" },
   { to: "/project-studio", label: "Project Studio" },
   { to: "/research", label: "Research" },
   { to: "/tokens", label: "Tokens" },
 ] as const;
 
-export function StudioNav({ email, tokens }: { email?: string | null; tokens?: number | null }) {
+export function StudioNav({
+  email,
+  tokens,
+}: {
+  email?: string | null | undefined;
+  tokens?: number | null | undefined;
+}) {
   const navigate = useNavigate();
 
   return (

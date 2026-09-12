@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
 import {
   Bug,
   GraduationCap,
@@ -10,6 +11,7 @@ import {
   Users,
 } from "lucide-react";
 import { MentorChat } from "@/components/MentorChat";
+import { VisionOverlay } from "@/components/VisionOverlay";
 import mark from "@/assets/dreamforge-mark.png";
 
 export const Route = createFileRoute("/")({
@@ -81,6 +83,8 @@ const plans = [
 ];
 
 function Landing() {
+  const [visionOpen, setVisionOpen] = useState(false);
+
   return (
     <div className="min-h-screen">
       <header className="flex items-center justify-between border-b-2 border-border px-4 py-3 sm:px-8">
@@ -128,12 +132,13 @@ function Landing() {
             >
               Forge my project
             </Link>
-            <a
-              href="#demo"
+            <button
+              type="button"
+              onClick={() => setVisionOpen(true)}
               className="brut bg-card px-6 py-4 font-display text-sm uppercase transition-transform hover:-translate-y-1"
             >
-              Try the mentor
-            </a>
+              VISION
+            </button>
           </div>
           <dl className="mt-12 grid grid-cols-3 gap-4 border-t-2 border-border pt-6">
             {[
@@ -261,6 +266,8 @@ function Landing() {
           </Link>
         </div>
       </footer>
+
+      <VisionOverlay open={visionOpen} onClose={() => setVisionOpen(false)} />
     </div>
   );
 }
