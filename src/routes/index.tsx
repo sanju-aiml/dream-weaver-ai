@@ -1,5 +1,4 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
 import {
   Bug,
   GraduationCap,
@@ -267,7 +266,6 @@ function Landing() {
         </div>
       </footer>
 
-      <VisionOverlay open={visionOpen} onClose={() => setVisionOpen(false)} />
     </div>
   );
 }
