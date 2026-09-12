@@ -50,7 +50,7 @@ function Builder() {
   const [demoUrl, setDemoUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!sessionLoading && !session) void navigate({ to: "/auth" });
+    if (!sessionLoading && !session) void navigate({ to: "/auth", search: { next: "/builder" } });
   }, [sessionLoading, session, navigate]);
 
   useEffect(() => {
@@ -58,6 +58,12 @@ function Builder() {
     ensureProfile(session.user.id, session.user.email)
       .then((t) => setTokens(t ?? 0))
       .catch(() => setTokens(null));
+    // Brand-new builders start with the StudySpark brief already in the box.
+    void listProjects()
+      .then((list) => {
+        if (list.length === 0) setDream((d) => d || STUDYSPARK_DREAM);
+      })
+      .catch(() => undefined);
   }, [session?.user?.id]);
 
 
