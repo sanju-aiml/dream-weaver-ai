@@ -38,7 +38,9 @@ function Builder() {
   const navigate = useNavigate();
   const { session, loading: sessionLoading } = useSession();
   const forge = useServerFn(forgeProject);
+  const sharpen = useServerFn(refinePrompt);
   const [dream, setDream] = useState("");
+  const [refining, setRefining] = useState(false);
   const [tokens, setTokens] = useState<number | null>(null);
   const [working, setWorking] = useState(false);
   const [result, setResult] = useState<{
