@@ -78,7 +78,7 @@ export const scanCode = createServerFn({ method: "POST" })
         language: data.language,
         code: data.code.slice(0, 24000),
         summary: parsed.summary ?? "",
-        findings: findings as unknown as object,
+        findings: JSON.parse(JSON.stringify(findings)),
       })
       .select()
       .single();
