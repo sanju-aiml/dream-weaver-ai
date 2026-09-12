@@ -28,6 +28,8 @@ export function MentorChat({
   emptyState,
   className = "",
   context,
+  toolbar,
+  pushRef,
 }: MentorChatProps) {
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [input, setInput] = useState("");
