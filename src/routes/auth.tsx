@@ -6,6 +6,9 @@ import { lovable } from "@/integrations/lovable/index";
 import mark from "@/assets/dreamforge-mark.png";
 
 export const Route = createFileRoute("/auth")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    next: typeof search["next"] === "string" ? (search["next"] as string) : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Sign in — DreamForge AI" },

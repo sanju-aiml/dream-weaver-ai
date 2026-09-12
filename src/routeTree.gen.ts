@@ -14,6 +14,7 @@ import { Route as AssetsRouteImport } from './routes/assets'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BuilderRouteImport } from './routes/builder'
 import { Route as CoursesRouteImport } from './routes/courses'
+import { Route as FoundersRouteImport } from './routes/founders'
 import { Route as ProjectStudioRouteImport } from './routes/project-studio'
 import { Route as ResearchRouteImport } from './routes/research'
 import { Route as StudioRouteImport } from './routes/studio'
@@ -49,6 +50,11 @@ const BuilderRoute = BuilderRouteImport.update({
 const CoursesRoute = CoursesRouteImport.update({
   id: '/courses',
   path: '/courses',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FoundersRoute = FoundersRouteImport.update({
+  id: '/founders',
+  path: '/founders',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProjectStudioRoute = ProjectStudioRouteImport.update({
@@ -113,6 +119,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/builder': typeof BuilderRoute
   '/courses': typeof CoursesRoute
+  '/founders': typeof FoundersRoute
   '/project-studio': typeof ProjectStudioRoute
   '/research': typeof ResearchRoute
   '/studio': typeof StudioRoute
@@ -131,6 +138,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/builder': typeof BuilderRoute
   '/courses': typeof CoursesRoute
+  '/founders': typeof FoundersRoute
   '/project-studio': typeof ProjectStudioRoute
   '/research': typeof ResearchRoute
   '/studio': typeof StudioRoute
@@ -150,6 +158,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/builder': typeof BuilderRoute
   '/courses': typeof CoursesRoute
+  '/founders': typeof FoundersRoute
   '/project-studio': typeof ProjectStudioRoute
   '/research': typeof ResearchRoute
   '/studio': typeof StudioRoute
@@ -170,6 +179,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/builder'
     | '/courses'
+    | '/founders'
     | '/project-studio'
     | '/research'
     | '/studio'
@@ -188,6 +198,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/builder'
     | '/courses'
+    | '/founders'
     | '/project-studio'
     | '/research'
     | '/studio'
@@ -206,6 +217,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/builder'
     | '/courses'
+    | '/founders'
     | '/project-studio'
     | '/research'
     | '/studio'
@@ -225,6 +237,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   BuilderRoute: typeof BuilderRoute
   CoursesRoute: typeof CoursesRoute
+  FoundersRoute: typeof FoundersRoute
   ProjectStudioRoute: typeof ProjectStudioRoute
   ResearchRoute: typeof ResearchRoute
   StudioRoute: typeof StudioRoute
@@ -273,6 +286,13 @@ declare module '@tanstack/react-router' {
       path: '/courses'
       fullPath: '/courses'
       preLoaderRoute: typeof CoursesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/founders': {
+      id: '/founders'
+      path: '/founders'
+      fullPath: '/founders'
+      preLoaderRoute: typeof FoundersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/project-studio': {
@@ -361,6 +381,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   BuilderRoute: BuilderRoute,
   CoursesRoute: CoursesRoute,
+  FoundersRoute: FoundersRoute,
   ProjectStudioRoute: ProjectStudioRoute,
   ResearchRoute: ResearchRoute,
   StudioRoute: StudioRoute,
