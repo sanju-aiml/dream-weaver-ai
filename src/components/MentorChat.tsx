@@ -46,6 +46,14 @@ export function MentorChat({
     bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages, streaming]);
 
+  useEffect(() => {
+    if (!pushRef) return;
+    pushRef.current = (message: ChatMessage) => setMessages((prev) => [...prev, message]);
+    return () => {
+      pushRef.current = null;
+    };
+  }, [pushRef]);
+
   async function persist(role: "user" | "assistant", content: string) {
     if (!persistForUserId) return;
     await supabase.from("messages").insert({ user_id: persistForUserId, role, content });
