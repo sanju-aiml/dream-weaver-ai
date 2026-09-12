@@ -25,10 +25,10 @@ Return ONLY a JSON object with this exact shape:
 }
 
 Rules:
-- 3 sprints maximum, each with 3-5 short tasks.
-- 3 to 6 files. They MUST be real, runnable, complete code — no "TODO" placeholders.
+- 3 sprints maximum, each with 3 short tasks.
+- Exactly 3 files. They MUST be real, runnable, complete code — no "TODO" placeholders.
 - Always include one file that is a single self-contained HTML page (path "index.html", language "html") that visually demonstrates the dream working in a browser. Inline all CSS and JS in that file. No external build step, no CDN that requires a key.
-- Keep every file under 200 lines.
+- Keep every file under 140 lines. Be concise: working over exhaustive.
 - Plain, encouraging language in summary and nextStep.
 - No prose outside the JSON.`;
 
@@ -56,7 +56,7 @@ export const forgeProject = createServerFn({ method: "POST" })
     const result = await askGateway({
       instructions: BUILDER_PROMPT,
       prompt: `The dream: ${data.dream}`,
-      effort: "high",
+      effort: "medium",
     });
 
     if (!result.ok) {
