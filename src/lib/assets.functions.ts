@@ -31,6 +31,7 @@ Rules:
 - 8 to 10 slides: Title, Problem, Objectives, Literature, Architecture, Implementation, Results, Demo, Conclusion, Future scope.
 - 3 to 5 short bullets per slide, max 12 words each.
 - "notes" is what the student says out loud, 2 sentences.
+- The design language is bold editorial: short punchy headlines, no filler words, no emoji.
 - Never invent specific numeric results; write results as things to measure, or mark them [ADD YOUR NUMBER].
 - No prose outside the JSON.`;
 
@@ -38,8 +39,38 @@ const COST = 2;
 
 export const generateDeck = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((data) => z.object({ topic: z.string().min(3) }).parse(data))
+  .inputValidator((data) =>
+    z
+      .object({
+        topic: z.string().min(3),
+        projectId: z.string().uuid().optional(),
+      })
+      .parse(data),
+  )
   .handler(async ({ data, context }) => {
+    let brief = data.topic;
+
+    if (data.projectId) {
+      const { data: project } = await context.supabase
+        .from("projects")
+        .select("title, dream, summary, stack")
+        .eq("id", data.projectId)
+        .maybeSingle();
+      if (project) {
+        brief = [
+          `Project title: ${project.title}`,
+          `Original dream: ${project.dream}`,
+          project.summary ? `What it does: ${project.summary}` : "",
+          Array.isArray(project.stack) && project.stack.length
+            ? `Stack: ${project.stack.join(", ")}`
+            : "",
+          data.topic && data.topic !== project.title ? `Extra notes: ${data.topic}` : "",
+        ]
+          .filter(Boolean)
+          .join("\n");
+      }
+    }
+
     const { data: balance, error: spendError } = (await context.supabase.rpc("spend_tokens", {
       _amount: COST,
       _reason: "slides + poster",
@@ -51,7 +82,7 @@ export const generateDeck = createServerFn({ method: "POST" })
 
     const result = await askGateway({
       instructions: DECK_PROMPT,
-      prompt: `Project: ${data.topic}`,
+      prompt: brief,
       effort: "medium",
     });
 
@@ -65,6 +96,19 @@ export const generateDeck = createServerFn({ method: "POST" })
       await context.supabase.rpc("spend_tokens", { _amount: -COST, _reason: "refund deck" });
       throw new Error("the deck came back unreadable — try again");
     }
+
+    if (data.projectId) {
+      await context.supabase
+        .from("projects")
+        .update({ deck: JSON.parse(JSON.stringify(deck)) })
+        .eq("id", data.projectId);
+    }
+
+    await context.supabase.from("messages").insert({
+      user_id: context.userId,
+      role: "assistant",
+      content: `**Slides & poster ready — ${deck.title}**\n\n${deck.slides.length + 1} slides plus a poster, in your bold editorial style. Cost: ${COST} tokens.\n\nPoster headline: _${deck.poster?.headline ?? ""}_`,
+    });
 
     return { deck, cost: COST, tokens: balance };
   });
