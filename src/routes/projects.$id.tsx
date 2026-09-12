@@ -1,10 +1,21 @@
 import { createFileRoute, Link, useParams } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { useServerFn } from "@tanstack/react-start";
 import { StudioNav } from "@/components/StudioNav";
+import { ScanReport } from "@/components/ScanReport";
 import { useSession } from "@/lib/useSession";
 import { getProject, type Project, makeDemoBlobUrl } from "@/lib/projects";
 import { getTokens } from "@/lib/workspace";
+import { scanCode, type ScanFinding } from "@/lib/scans.functions";
+
+function guessLanguage(path: string) {
+  if (path.endsWith(".py")) return "python";
+  if (path.endsWith(".html")) return "html";
+  if (path.endsWith(".css")) return "css";
+  if (path.endsWith(".ts") || path.endsWith(".tsx")) return "typescript";
+  return "javascript";
+}
 
 export const Route = createFileRoute("/projects/$id")({
   head: ({ params }) => ({
@@ -28,6 +39,44 @@ function ProjectDetail() {
   const [loading, setLoading] = useState(true);
   const [activeFile, setActiveFile] = useState(0);
   const [demoUrl, setDemoUrl] = useState<string | null>(null);
+  const runScan = useServerFn(scanCode);
+  const [scanning, setScanning] = useState(false);
+  const [scan, setScan] = useState<
+    { summary: string; findings: ScanFinding[]; fixedCode: string; filename: string; original: string } | null
+  >(null);
+
+  async function handleScan() {
+    const file = project?.files[activeFile];
+    if (!file) return;
+    setScanning(true);
+    setScan(null);
+    try {
+      const res = await runScan({
+        data: {
+          filename: file.path,
+          language: guessLanguage(file.path),
+          code: file.code,
+          projectId: id,
+        },
+      });
+      setScan({
+        summary: res.summary,
+        findings: res.findings,
+        fixedCode: res.fixedCode,
+        filename: file.path,
+        original: file.code,
+      });
+      const bal = await getTokens();
+      setTokens(bal);
+      toast.success(`Scanned ${file.path}`);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Scan failed.";
+      toast.error(message.includes("insufficient") ? "Not enough tokens for a scan." : message.slice(0, 160));
+    } finally {
+      setScanning(false);
+    }
+  }
+
 
   useEffect(() => {
     Promise.all([getProject(id), getTokens()])
@@ -126,8 +175,29 @@ function ProjectDetail() {
             <pre className="mt-3 max-h-[360px] overflow-auto bg-[#0a0a0a] p-3 text-xs text-[#e8e8e8]">
               <code>{project.files[activeFile]?.code ?? ""}</code>
             </pre>
+            <button
+              type="button"
+              onClick={handleScan}
+              disabled={scanning}
+              className="brut mt-3 bg-accent px-4 py-2 font-display text-xs tracking-widest text-accent-foreground uppercase disabled:opacity-60"
+            >
+              {scanning ? "Scanning…" : "Run error scan (1 token)"}
+            </button>
           </section>
         </div>
+
+        {scan ? (
+          <section className="mt-6">
+            <ScanReport
+              summary={scan.summary}
+              findings={scan.findings}
+              originalCode={scan.original}
+              fixedCode={scan.fixedCode}
+              filename={scan.filename}
+            />
+          </section>
+        ) : null}
+
 
         <section className="mt-6 brut bg-card p-4">
           <h2 className="text-sm">Sprints</h2>

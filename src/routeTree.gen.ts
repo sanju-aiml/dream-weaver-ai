@@ -14,7 +14,6 @@ import { Route as AssetsRouteImport } from './routes/assets'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BuilderRouteImport } from './routes/builder'
 import { Route as ProjectStudioRouteImport } from './routes/project-studio'
-import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as ResearchRouteImport } from './routes/research'
 import { Route as StudioRouteImport } from './routes/studio'
 import { Route as TokensRouteImport } from './routes/tokens'
@@ -22,6 +21,7 @@ import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as ApiGenerateProjectRouteImport } from './routes/api/generate-project'
 import { Route as ApiResearchRouteImport } from './routes/api/research'
 import { Route as ApiScanCodeRouteImport } from './routes/api/scan-code'
+import { Route as ProjectsIndexRouteImport } from './routes/projects.index'
 import { Route as ProjectsIdRouteImport } from './routes/projects.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -47,11 +47,6 @@ const BuilderRoute = BuilderRouteImport.update({
 const ProjectStudioRoute = ProjectStudioRouteImport.update({
   id: '/project-studio',
   path: '/project-studio',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProjectsRoute = ProjectsRouteImport.update({
-  id: '/projects',
-  path: '/projects',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResearchRoute = ResearchRouteImport.update({
@@ -89,10 +84,15 @@ const ApiScanCodeRoute = ApiScanCodeRouteImport.update({
   path: '/api/scan-code',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProjectsIndexRoute = ProjectsIndexRouteImport.update({
+  id: '/projects/',
+  path: '/projects/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProjectsIdRoute = ProjectsIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => ProjectsRoute,
+  id: '/projects/$id',
+  path: '/projects/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -101,7 +101,6 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/builder': typeof BuilderRoute
   '/project-studio': typeof ProjectStudioRoute
-  '/projects': typeof ProjectsRouteWithChildren
   '/research': typeof ResearchRoute
   '/studio': typeof StudioRoute
   '/tokens': typeof TokensRoute
@@ -110,6 +109,7 @@ export interface FileRoutesByFullPath {
   '/api/research': typeof ApiResearchRoute
   '/api/scan-code': typeof ApiScanCodeRoute
   '/projects/$id': typeof ProjectsIdRoute
+  '/projects/': typeof ProjectsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -117,7 +117,6 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/builder': typeof BuilderRoute
   '/project-studio': typeof ProjectStudioRoute
-  '/projects': typeof ProjectsRouteWithChildren
   '/research': typeof ResearchRoute
   '/studio': typeof StudioRoute
   '/tokens': typeof TokensRoute
@@ -126,6 +125,7 @@ export interface FileRoutesByTo {
   '/api/research': typeof ApiResearchRoute
   '/api/scan-code': typeof ApiScanCodeRoute
   '/projects/$id': typeof ProjectsIdRoute
+  '/projects': typeof ProjectsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -134,7 +134,6 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/builder': typeof BuilderRoute
   '/project-studio': typeof ProjectStudioRoute
-  '/projects': typeof ProjectsRouteWithChildren
   '/research': typeof ResearchRoute
   '/studio': typeof StudioRoute
   '/tokens': typeof TokensRoute
@@ -143,6 +142,7 @@ export interface FileRoutesById {
   '/api/research': typeof ApiResearchRoute
   '/api/scan-code': typeof ApiScanCodeRoute
   '/projects/$id': typeof ProjectsIdRoute
+  '/projects/': typeof ProjectsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -152,7 +152,6 @@ export interface FileRouteTypes {
     | '/auth'
     | '/builder'
     | '/project-studio'
-    | '/projects'
     | '/research'
     | '/studio'
     | '/tokens'
@@ -161,6 +160,7 @@ export interface FileRouteTypes {
     | '/api/research'
     | '/api/scan-code'
     | '/projects/$id'
+    | '/projects/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -168,7 +168,6 @@ export interface FileRouteTypes {
     | '/auth'
     | '/builder'
     | '/project-studio'
-    | '/projects'
     | '/research'
     | '/studio'
     | '/tokens'
@@ -177,6 +176,7 @@ export interface FileRouteTypes {
     | '/api/research'
     | '/api/scan-code'
     | '/projects/$id'
+    | '/projects'
   id:
     | '__root__'
     | '/'
@@ -184,7 +184,6 @@ export interface FileRouteTypes {
     | '/auth'
     | '/builder'
     | '/project-studio'
-    | '/projects'
     | '/research'
     | '/studio'
     | '/tokens'
@@ -193,6 +192,7 @@ export interface FileRouteTypes {
     | '/api/research'
     | '/api/scan-code'
     | '/projects/$id'
+    | '/projects/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -201,7 +201,6 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   BuilderRoute: typeof BuilderRoute
   ProjectStudioRoute: typeof ProjectStudioRoute
-  ProjectsRoute: typeof ProjectsRouteWithChildren
   ResearchRoute: typeof ResearchRoute
   StudioRoute: typeof StudioRoute
   TokensRoute: typeof TokensRoute
@@ -209,6 +208,8 @@ export interface RootRouteChildren {
   ApiGenerateProjectRoute: typeof ApiGenerateProjectRoute
   ApiResearchRoute: typeof ApiResearchRoute
   ApiScanCodeRoute: typeof ApiScanCodeRoute
+  ProjectsIdRoute: typeof ProjectsIdRoute
+  ProjectsIndexRoute: typeof ProjectsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -246,13 +247,6 @@ declare module '@tanstack/react-router' {
       path: '/project-studio'
       fullPath: '/project-studio'
       preLoaderRoute: typeof ProjectStudioRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/projects': {
-      id: '/projects'
-      path: '/projects'
-      fullPath: '/projects'
-      preLoaderRoute: typeof ProjectsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/research': {
@@ -304,27 +298,22 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiScanCodeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/projects/': {
+      id: '/projects/'
+      path: '/projects'
+      fullPath: '/projects/'
+      preLoaderRoute: typeof ProjectsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/projects/$id': {
       id: '/projects/$id'
-      path: '/$id'
+      path: '/projects/$id'
       fullPath: '/projects/$id'
       preLoaderRoute: typeof ProjectsIdRouteImport
-      parentRoute: typeof ProjectsRoute
+      parentRoute: typeof rootRouteImport
     }
   }
 }
-
-interface ProjectsRouteChildren {
-  ProjectsIdRoute: typeof ProjectsIdRoute
-}
-
-const ProjectsRouteChildren: ProjectsRouteChildren = {
-  ProjectsIdRoute: ProjectsIdRoute,
-}
-
-const ProjectsRouteWithChildren = ProjectsRoute._addFileChildren(
-  ProjectsRouteChildren,
-)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -332,7 +321,6 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   BuilderRoute: BuilderRoute,
   ProjectStudioRoute: ProjectStudioRoute,
-  ProjectsRoute: ProjectsRouteWithChildren,
   ResearchRoute: ResearchRoute,
   StudioRoute: StudioRoute,
   TokensRoute: TokensRoute,
@@ -340,6 +328,8 @@ const rootRouteChildren: RootRouteChildren = {
   ApiGenerateProjectRoute: ApiGenerateProjectRoute,
   ApiResearchRoute: ApiResearchRoute,
   ApiScanCodeRoute: ApiScanCodeRoute,
+  ProjectsIdRoute: ProjectsIdRoute,
+  ProjectsIndexRoute: ProjectsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -6,7 +6,7 @@ import { useSession } from "@/lib/useSession";
 import { listProjects, type Project } from "@/lib/projects";
 import { getTokens } from "@/lib/workspace";
 
-export const Route = createFileRoute("/projects")({
+export const Route = createFileRoute("/projects/")({
   head: () => ({
     meta: [
       { title: "My Projects — DreamForge AI" },
