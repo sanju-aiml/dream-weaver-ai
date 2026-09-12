@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      code_scans: {
+        Row: {
+          code: string
+          created_at: string
+          filename: string
+          findings: Json
+          id: string
+          language: string | null
+          summary: string | null
+          user_id: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          filename: string
+          findings?: Json
+          id?: string
+          language?: string | null
+          summary?: string | null
+          user_id: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          filename?: string
+          findings?: Json
+          id?: string
+          language?: string | null
+          summary?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       messages: {
         Row: {
           content: string
@@ -65,12 +98,105 @@ export type Database = {
         }
         Relationships: []
       }
+      projects: {
+        Row: {
+          created_at: string
+          dream: string
+          files: Json
+          id: string
+          sprints: Json
+          stack: string[]
+          summary: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          dream: string
+          files?: Json
+          id?: string
+          sprints?: Json
+          stack?: string[]
+          summary?: string | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          dream?: string
+          files?: Json
+          id?: string
+          sprints?: Json
+          stack?: string[]
+          summary?: string | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      research_items: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          kind: string
+          topic: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          kind: string
+          topic: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          kind?: string
+          topic?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      token_ledger: {
+        Row: {
+          balance_after: number
+          created_at: string
+          delta: number
+          id: string
+          reason: string
+          user_id: string
+        }
+        Insert: {
+          balance_after: number
+          created_at?: string
+          delta: number
+          id?: string
+          reason: string
+          user_id: string
+        }
+        Update: {
+          balance_after?: number
+          created_at?: string
+          delta?: number
+          id?: string
+          reason?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      spend_tokens: {
+        Args: { _amount: number; _reason: string }
+        Returns: number
+      }
     }
     Enums: {
       [_ in never]: never
