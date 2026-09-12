@@ -169,6 +169,8 @@ export function MentorChat({
         <div ref={bottomRef} />
       </div>
 
+      {toolbar && <div className="rule-top bg-secondary p-3">{toolbar}</div>}
+
       <form
         onSubmit={(e) => {
           e.preventDefault();
