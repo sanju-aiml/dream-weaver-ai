@@ -177,6 +177,7 @@ function Landing() {
           />
         </div>
       </section>
+      </VisionBackground>
 
       <section className="border-y-2 border-border bg-primary px-4 py-14 text-primary-foreground sm:px-8">
         <div className="grid gap-8 md:grid-cols-3">
