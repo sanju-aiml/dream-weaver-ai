@@ -24,6 +24,7 @@ import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as ApiGenerateProjectRouteImport } from './routes/api/generate-project'
 import { Route as ApiResearchRouteImport } from './routes/api/research'
 import { Route as ApiScanCodeRouteImport } from './routes/api/scan-code'
+import { Route as ApiSpeakRouteImport } from './routes/api/speak'
 import { Route as ProjectsIndexRouteImport } from './routes/projects.index'
 import { Route as ProjectsIdRouteImport } from './routes/projects.$id'
 
@@ -102,6 +103,11 @@ const ApiScanCodeRoute = ApiScanCodeRouteImport.update({
   path: '/api/scan-code',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiSpeakRoute = ApiSpeakRouteImport.update({
+  id: '/api/speak',
+  path: '/api/speak',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProjectsIndexRoute = ProjectsIndexRouteImport.update({
   id: '/projects/',
   path: '/projects/',
@@ -129,6 +135,7 @@ export interface FileRoutesByFullPath {
   '/api/generate-project': typeof ApiGenerateProjectRoute
   '/api/research': typeof ApiResearchRoute
   '/api/scan-code': typeof ApiScanCodeRoute
+  '/api/speak': typeof ApiSpeakRoute
   '/projects/$id': typeof ProjectsIdRoute
   '/projects/': typeof ProjectsIndexRoute
 }
@@ -148,6 +155,7 @@ export interface FileRoutesByTo {
   '/api/generate-project': typeof ApiGenerateProjectRoute
   '/api/research': typeof ApiResearchRoute
   '/api/scan-code': typeof ApiScanCodeRoute
+  '/api/speak': typeof ApiSpeakRoute
   '/projects/$id': typeof ProjectsIdRoute
   '/projects': typeof ProjectsIndexRoute
 }
@@ -168,6 +176,7 @@ export interface FileRoutesById {
   '/api/generate-project': typeof ApiGenerateProjectRoute
   '/api/research': typeof ApiResearchRoute
   '/api/scan-code': typeof ApiScanCodeRoute
+  '/api/speak': typeof ApiSpeakRoute
   '/projects/$id': typeof ProjectsIdRoute
   '/projects/': typeof ProjectsIndexRoute
 }
@@ -189,6 +198,7 @@ export interface FileRouteTypes {
     | '/api/generate-project'
     | '/api/research'
     | '/api/scan-code'
+    | '/api/speak'
     | '/projects/$id'
     | '/projects/'
   fileRoutesByTo: FileRoutesByTo
@@ -208,6 +218,7 @@ export interface FileRouteTypes {
     | '/api/generate-project'
     | '/api/research'
     | '/api/scan-code'
+    | '/api/speak'
     | '/projects/$id'
     | '/projects'
   id:
@@ -227,6 +238,7 @@ export interface FileRouteTypes {
     | '/api/generate-project'
     | '/api/research'
     | '/api/scan-code'
+    | '/api/speak'
     | '/projects/$id'
     | '/projects/'
   fileRoutesById: FileRoutesById
@@ -247,6 +259,7 @@ export interface RootRouteChildren {
   ApiGenerateProjectRoute: typeof ApiGenerateProjectRoute
   ApiResearchRoute: typeof ApiResearchRoute
   ApiScanCodeRoute: typeof ApiScanCodeRoute
+  ApiSpeakRoute: typeof ApiSpeakRoute
   ProjectsIdRoute: typeof ProjectsIdRoute
   ProjectsIndexRoute: typeof ProjectsIndexRoute
 }
@@ -358,6 +371,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiScanCodeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/speak': {
+      id: '/api/speak'
+      path: '/api/speak'
+      fullPath: '/api/speak'
+      preLoaderRoute: typeof ApiSpeakRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/projects/': {
       id: '/projects/'
       path: '/projects'
@@ -391,6 +411,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiGenerateProjectRoute: ApiGenerateProjectRoute,
   ApiResearchRoute: ApiResearchRoute,
   ApiScanCodeRoute: ApiScanCodeRoute,
+  ApiSpeakRoute: ApiSpeakRoute,
   ProjectsIdRoute: ProjectsIdRoute,
   ProjectsIndexRoute: ProjectsIndexRoute,
 }
